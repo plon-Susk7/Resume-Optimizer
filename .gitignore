@@ -1,4 +1,4 @@
-models
 .ipynb_checkpoints
 __pycache__
 models/pretrained_model.pth
+models/__pycache__
