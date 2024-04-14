@@ -1,9 +1,10 @@
 const express = require('express')
 const {GoogleGenerativeAI} = require('@google/generative-ai');
+require('dotenv').config();
 
 const app = express();
 
-const genAI = new GoogleGenerativeAI('AIzaSyAIRNUh9_3wKKASbh11dnYEnPvxHoU9Swg');
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 const model = genAI.getGenerativeModel({model:'gemini-pro'})
 
