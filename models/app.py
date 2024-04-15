@@ -1,24 +1,27 @@
-from flask import Flask,request, jsonify
+from flask import Flask, request, jsonify
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from flask_cors import CORS
+import pdfplumber
+from helper import *
 import numpy as np
 
 app = Flask(__name__)
+CORS(app)
 
 # load model
 
 model = AutoModelForSequenceClassification.from_pretrained("google-bert/bert-base-cased", num_labels=25) 
 tokenizer = AutoTokenizer.from_pretrained("google-bert/bert-base-cased") 
-model.load_state_dict(torch.load('pretrained_model.pth'))
-model.to('cpu')
+model.load_state_dict(torch.load('pretrained_model.pth', map_location=torch.device('cpu')))
 model.eval()
-
 
 @app.route('/')
 def hello():
     return 'Hello, World!'
 
-@app.route('/predict',methods=['POST'])
+
+@app.route('/predict', methods=['POST'])
 def predict():
     # get data from request
     '''
@@ -27,13 +30,22 @@ def predict():
             "data": "This is a sample text"
         }
     '''
-    text = request.get_json(force=True)
+
+    if 'resume' not in request.files:
+        return jsonify({'error': 'No file part'})
     
+    
+    resume = request.files['resume']
+
+    text = parse_pdf(resume)
+    text = preprocess_text(text)
     # make prediction
-    data = tokenizer(text['data'],padding="max_length",truncation=True, return_tensors="pt")
+    data = tokenizer(text, padding="max_length", truncation=True, return_tensors="pt")
     prediction = model(**data).logits.detach().numpy().tolist()[0]
-    return jsonify({"result" : prediction})
+    labels = np.argsort(prediction)[::-1]
+    predictions = [[reverse_label_encoder[label], prediction[label]] for label in labels]
+    return jsonify({"result" : predictions})
+
 
 if __name__ == '__main__':
-
-    app.run()
+    app.run(host='0.0.0.0',post=5000)

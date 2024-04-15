@@ -1,12 +1,12 @@
 const express = require('express')
-const {GoogleGenerativeAI} = require('@google/generative-ai');
-require('dotenv').config();
+// const {GoogleGenerativeAI} = require('@google/generative-ai');
+// require('dotenv').config();
 
 const app = express();
 
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+// const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-const model = genAI.getGenerativeModel({model:'gemini-pro'})
+// const model = genAI.getGenerativeModel({model:'gemini-pro'})
 
 const PORT = 8080;
 

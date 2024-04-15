@@ -1,6 +1,8 @@
-const {GoogleGenerativeAI} = require('@google/generative-ai');
-const genAI = new GoogleGenerativeAI('AIzaSyAIRNUh9_3wKKASbh11dnYEnPvxHoU9Swg');
+require('dotenv').config();
 
+const {GoogleGenerativeAI} = require('@google/generative-ai');
+
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 
 const getResumeSummary = async (req, res) => {
@@ -11,7 +13,7 @@ const getResumeSummary = async (req, res) => {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
-    res.status(200).send(text);
+    res.status(200).json({'response' : text});
 }
 
 
