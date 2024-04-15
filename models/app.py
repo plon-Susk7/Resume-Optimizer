@@ -65,7 +65,6 @@ def predict():
                 "Job Description" : details.jobUrl,
             }
             job_des[data].append(job_info)
-    print(job_des)
     return jsonify({"result" : job_des})
 
 

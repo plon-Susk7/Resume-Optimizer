@@ -40,11 +40,11 @@ const FileUpload = () => {
         <div className="Job openings">
            
         <div>
-        {responseData && Object.keys(responseData[0]).map((key) => {
+        {responseData && Object.keys(responseData.result).map((key) => {
           return (
             <div key={key}>
               <h2>{key}</h2>
-              {responseData[0][key].map((value) => {
+              {responseData.result[key].map((value) => {
                 return (
                   <div key={value['Job Id']}>
                     <h3>{value['Job Title']}</h3>
