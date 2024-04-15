@@ -39,12 +39,34 @@ def predict():
 
     text = parse_pdf(resume)
     text = preprocess_text(text)
+
+    print(text)
     # make prediction
     data = tokenizer(text, padding="max_length", truncation=True, return_tensors="pt")
     prediction = model(**data).logits.detach().numpy().tolist()[0]
+    
     labels = np.argsort(prediction)[::-1]
-    predictions = [[reverse_label_encoder[label], prediction[label]] for label in labels]
-    return jsonify({"result" : predictions})
+    
+    predictions = [reverse_label_encoder[label] for label in labels[:3]]
+    print(predictions)
+
+    api = ReedAPI('d243a8ba-42a2-4abe-81a5-b3b54171dffe')
+    job_des = {}
+
+    for data in predictions:
+        jobs = api.search(keywords = data)
+        job_des[data] = [] # data is the job title
+
+        for job in jobs[:5]:
+            details = job.getJobsDetails()
+            job_info = {
+                "Job Id" : details.jobId,
+                "Job Title" : details.jobTitle,
+                "Job Description" : details.jobUrl,
+            }
+            job_des[data].append(job_info)
+    print(job_des)
+    return jsonify({"result" : job_des})
 
 
 if __name__ == '__main__':
