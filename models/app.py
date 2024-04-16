@@ -5,6 +5,12 @@ from flask_cors import CORS
 import pdfplumber
 from helper import *
 import numpy as np
+import google.generativeai as genai
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+genai.configure(api_key=os.getenv('API_KEY'))
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +26,22 @@ model.eval()
 def hello():
     return 'Hello, World!'
 
+@app.route('/optimise',methods=['POST'])
+def optimise():
+    if 'resume' not in request.files:
+        return jsonify({'error': 'No file part'})
+    
+    
+    resume = request.files['resume']
+
+    text = parse_pdf(resume)
+    text = preprocess_text(text)
+
+    text = 'What should I do to optimise this resume? \n' + text
+    model = genai.GenerativeModel('gemini-pro')
+    response = model.generate_content(text)
+    return jsonify({"text" : response.text})
+    
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -50,7 +72,7 @@ def predict():
     predictions = [reverse_label_encoder[label] for label in labels[:3]]
     print(predictions)
 
-    api = ReedAPI('d243a8ba-42a2-4abe-81a5-b3b54171dffe')
+    api = ReedAPI(os.getenv('REED_API')
     job_des = {}
 
     for data in predictions:

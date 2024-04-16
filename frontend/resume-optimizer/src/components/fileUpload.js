@@ -35,6 +35,7 @@ const FileUpload = () => {
       <div className="App">
         <input type="file" onChange={handleFileChange} accept='.pdf'/>
         <button onClick={handleUpload}>Upload</button>
+        
 
         {console.log(responseData)}
         <div className="Job openings">
