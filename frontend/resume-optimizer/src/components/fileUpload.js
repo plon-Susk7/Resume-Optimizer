@@ -29,7 +29,8 @@ const FileUpload = () => {
     }
 
     return (
-        <div className="container mx-auto my-8">
+      <div className="container mx-auto my-8">
+          {!responseData && (
             <div className="max-w-lg mx-auto p-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md">
                 <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600 transition duration-300">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -42,23 +43,26 @@ const FileUpload = () => {
                     <input id="dropzone-file" type="file" onChange={handleFileChange} accept='.pdf'/>
                 </label>
                 <button onClick={handleUpload} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload</button>
-            </div>
+            </div>  
+          )}
+        
+  
 
-            {responseData && (
-                <div className="mt-8">
-                    {Object.keys(responseData.result).map((key) => (
-                        <div key={key}>
-                            <h2>{key}</h2>
-                            {responseData.result[key].map((value) => (
-                                <div key={value['Job Id']}>
-                                    <h3>{value['Job Title']}</h3>
-                                    <a href={value['Job Description']}>Job Description</a>
-                                </div>
-                            ))}
-                        </div>
-                    ))}
-                </div>
-            )}
+        {responseData && (
+            <div className="mt-8">
+                {Object.keys(responseData.result).map((key) => (
+                    <div key={key}>
+                        <h2>{key}</h2>
+                        {responseData.result[key].map((value) => (
+                            <div key={value['Job Id']}>
+                                <h3>{value['Job Title']}</h3>
+                                <a href={value['Job Description']}>Job Description</a>
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </div>
+        )}
         </div>
     );
 }
