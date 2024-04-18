@@ -11,7 +11,7 @@ const Home = () => {
                 <Link to='/job-finder'>
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">Find Jobs</button>
                 </Link>
-                <Link to='/optimize'>
+                <Link to='/optimise'>
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Optimize resume</button>
                 </Link>
             </div>
