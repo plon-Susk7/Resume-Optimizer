@@ -72,7 +72,7 @@ def predict():
     predictions = [reverse_label_encoder[label] for label in labels[:3]]
     print(predictions)
 
-    api = ReedAPI(os.getenv('REED_API')
+    api = ReedAPI(os.getenv('REED_API'))
     job_des = {}
 
     for data in predictions:
