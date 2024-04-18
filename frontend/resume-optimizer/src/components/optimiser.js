@@ -33,7 +33,7 @@ const Optimise = () => {
     }
 
     return (
-      <div className="App">
+      <div>
         <input type="file" onChange={handleFileChange} accept='.pdf'/>
         <button onClick={handleUpload}>Optimise Resume</button>
         <div>
