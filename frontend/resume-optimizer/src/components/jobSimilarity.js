@@ -1,40 +1,36 @@
 import React,{useState} from 'react';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
 
-const Optimise = () => {
+const Similarity = () => {
  
     const [resume, setResume] = useState(null);
-    const [markdownContent, setMarkdownContent] = useState(''); 
-    
+    const [responseData, setResponseData] = useState(null);
+
     const handleFileChange = (e) => {
-         setResume(e.target.files[0]);
+        setResume(e.target.files[0]);
     }
 
-    const handleUpload =  () => {
-         if(resume){
+    const handleUpload = async () => {
+        if (resume) {
             const formData = new FormData();
             formData.append('resume', resume);
 
-            try{
-                axios.post('http://localhost:5000/optimise', formData, {}) // API endpoint to classification prediction.
-                .then(res=>{
-                    // Do something with the response
-                    // console.log(res.data.text)
-                    setMarkdownContent(res.data.text)
-                })
-                console.log('File uploaded successfully')
-            }catch(error){
+            try {
+                const res = await axios.post('http://localhost:5000/similarity', formData, {});
+                setResponseData(res.data);
+                console.log(res.data);
+                console.log('File uploaded successfully');
+            } catch (error) {
                 console.log(error);
             }
-         }else{
+        } else {
             console.log('No file selected');
-         }
+        }
     }
 
     return (
       <div className="container mx-auto my-8">
-        {!markdownContent && (
+          {!responseData && (
             <div className="max-w-lg mx-auto p-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md">
                 <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600 transition duration-300">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -46,19 +42,28 @@ const Optimise = () => {
                     </div>
                     <input id="dropzone-file" type="file" onChange={handleFileChange} accept='.pdf'/>
                 </label>
-                <button onClick={handleUpload} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Optimise</button>
-            </div>
-        )}
+                <button onClick={handleUpload} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload</button>
+            </div>  
+          )}
 
-        {/* <input type="file" onChange={handleFileChange} accept='.pdf'/>
-        <button onClick={handleUpload}>Optimise Resume</button> */}
-        <div>
-            
-            <ReactMarkdown>{markdownContent}</ReactMarkdown>
+        {responseData && (
+        <div className="mt-20">
+            <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-black">Jobs that match your resume:</h2>
+            <ol class="max-w-md space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
+            {responseData.result.map((key, index) => (
+            <li>
+                <span class="font-semibold text-gray-900 dark:text-black">{key}</span>
+            </li>
+            // <h1 key={index}>{key}</h1>
+            ))}
+            </ol>
         </div>
-      </div>
+        )}
+        
+  
+        </div>
     );
 
 }
 
-export {Optimise}
+export {Similarity}

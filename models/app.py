@@ -26,6 +26,24 @@ model.eval()
 def hello():
     return 'Hello, World!'
 
+@app.route('/similarity',methods=['POST'])
+def similarity():
+    if 'resume' not in request.files:
+        return jsonify({'error': 'No file part'})
+    
+    
+    resume = request.files['resume']
+
+    text = parse_pdf(resume)
+    text = preprocess_text(text)
+    data = tokenizer(text, padding="max_length", truncation=True, return_tensors="pt")
+    prediction = model(**data).logits.detach().numpy().tolist()[0]
+    
+    labels = np.argsort(prediction)[::-1]
+    
+    predictions = [reverse_label_encoder[label] for label in labels[:5]]
+    return jsonify({'result':predictions})
+
 @app.route('/optimise',methods=['POST'])
 def optimise():
     if 'resume' not in request.files:

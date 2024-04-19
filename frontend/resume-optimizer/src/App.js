@@ -3,6 +3,7 @@ import {Home} from './components/Home'
 import { FileUpload } from './components/fileUpload';
 import { Optimise } from './components/optimiser';
 import './index.css';
+import { Similarity } from './components/jobSimilarity';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path='/' element={<Home/>}/>
           <Route path='/job-finder' element={<FileUpload/>}/>
           <Route path='/optimise' element={<Optimise/>}/>
+          <Route path='/similarity' element={<Similarity/>}/>
         </Routes>
       </BrowserRouter>
       {/* <FileUpload/> */}
